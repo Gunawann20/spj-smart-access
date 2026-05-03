@@ -58,6 +58,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/document/{document}', [DocumentController::class, 'update'])->name('document.update');
     Route::delete('/document/{document}', [DocumentController::class, 'destroy'])->name('document.destroy');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download');
+
+    // Profile Routes
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile.index');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password');
 });
 
 // Document Approval Routes (Admin Only)

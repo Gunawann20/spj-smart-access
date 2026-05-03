@@ -92,12 +92,15 @@
                         <p class="text-gray-600 text-xs m-0">Direktorat Bina Akses Pelayanan KB</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-[#f59e0b] flex items-center justify-center text-white font-bold text-lg">
+                <a href="{{ route('profile.index') }}" class="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-lg transition">
+                    <div class="w-10 h-10 rounded-full bg-[#f59e0b] flex items-center justify-center text-white font-bold text-lg shadow-sm">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     </div>
-                    <span class="font-semibold text-[#1e3a8a]">{{ auth()->user()->name }}</span>
-                </div>
+                    <div class="hidden md:block text-left">
+                        <p class="font-bold text-[#1e3a8a] leading-tight">{{ auth()->user()->name }}</p>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">{{ auth()->user()->role }}</p>
+                    </div>
+                </a>
             </div>
 
             <!-- Content -->
