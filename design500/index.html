@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Dokumen - Rumah Pendukung Layanan</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#home" onclick="closeSidebar()">🏠 Beranda</a></li>
+                <li><a href="#upload" onclick="closeSidebar()">📤 Upload Dokumen</a></li>
+                <li><a href="#documents" onclick="closeSidebar()">📁 Dokumen</a></li>
+                <li><a href="#about" onclick="closeSidebar()">ℹ️ Tentang</a></li>
+                <li class="divider"></li>
+                <li><a href="#" class="sidebar-link danger">🚪 Logout</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <p>Pengguna: <strong>Admin</strong></p>
+            <p class="sidebar-footer-text">Terakhir login: Hari ini</p>
+        </div>
+    </aside>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <div class="logo">
+                <h2>📄 Sistem Manajemen Dokumen</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="active">Beranda</a></li>
+                <li><a href="#upload">Upload</a></li>
+                <li><a href="#documents">Dokumen</a></li>
+                <li><a href="#about">Tentang</a></li>
+                <li><a href="#" class="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Selamat Datang di Sistem Manajemen Dokumen</h1>
+            <p>Rumah Pendukung Layanan Dukungan Manajemen</p>
+            <p class="subtitle">Kelola, Simpan, dan Akses Dokumen Anda dengan Mudah</p>
+            <button class="btn btn-primary" onclick="scrollToUpload()">Mulai Upload Dokumen</button>
+        </div>
+
+        <!-- Quick Menu Shortcuts -->
+        <div class="quick-menu">
+            <h3>Menu Cepat</h3>
+            <div class="quick-menu-grid">
+                <div class="quick-item" onclick="scrollToUpload()">
+                    <div class="quick-icon">📤</div>
+                    <span>Upload Dokumen</span>
+                </div>
+                <div class="quick-item" onclick="document.getElementById('documents').scrollIntoView({behavior: 'smooth'})">
+                    <div class="quick-icon">📁</div>
+                    <span>Lihat Dokumen</span>
+                </div>
+                <div class="quick-item" onclick="filterByType('RKAKL')">
+                    <div class="quick-icon">📊</div>
+                    <span>RKAKL</span>
+                </div>
+                <div class="quick-item" onclick="filterByType('RAPK')">
+                    <div class="quick-icon">📈</div>
+                    <span>RAPK</span>
+                </div>
+                <div class="quick-item" onclick="filterByType('SPJ')">
+                    <div class="quick-icon">✅</div>
+                    <span>SPJ</span>
+                </div>
+                <div class="quick-item" onclick="filterByType('LKJ')">
+                    <div class="quick-icon">📝</div>
+                    <span>LKJ</span>
+                </div>
+                <div class="quick-item" onclick="filterByType('LAKIP')">
+                    <div class="quick-icon">🎯</div>
+                    <span>LAKIP</span>
+                </div>
+                <div class="quick-item" onclick="showNotification('Fitur panduan akan segera tersedia', 'info')">
+                    <div class="quick-icon">❓</div>
+                    <span>Bantuan</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload" class="upload-section">
+        <div class="container">
+            <h2>Upload Dokumen Baru</h2>
+            <div class="upload-container">
+                <div class="upload-area">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <h3>Drag & Drop Dokumen Anda</h3>
+                    <p>atau klik untuk memilih file</p>
+                    <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" hidden>
+                    <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">Pilih File</button>
+                </div>
+
+                <div class="upload-form">
+                    <form onsubmit="handleUpload(event)">
+                        <div class="form-group">
+                            <label for="docType">Jenis Dokumen *</label>
+                            <select id="docType" required>
+                                <option value="">-- Pilih Jenis Dokumen --</option>
+                                <option value="RKAKL">RKAKL (Rencana Kerja Anggaran Kinerja Lembaga)</option>
+                                <option value="RAPK">RAPK (Rencana Alokasi Program & Kegiatan)</option>
+                                <option value="SPJ">SPJ (Surat Pertanggungjawaban)</option>
+                                <option value="LKJ">LKJ (Laporan Kinerja Jabatan)</option>
+                                <option value="LAKIP">LAKIP (Laporan Akuntabilitas Kinerja Instansi Pemerintah)</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="docTitle">Judul Dokumen *</label>
+                            <input type="text" id="docTitle" placeholder="Masukkan judul dokumen" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="docDescription">Deskripsi / Keterangan</label>
+                            <textarea id="docDescription" placeholder="Masukkan deskripsi dokumen (opsional)" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="docYear">Tahun Anggaran *</label>
+                            <input type="number" id="docYear" placeholder="2026" min="2020" max="2099" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Upload Dokumen</button>
+                            <button type="reset" class="btn btn-outline">Batal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documents Section -->
+    <section id="documents" class="documents-section">
+        <div class="container">
+            <h2>Dokumen Tersimpan</h2>
+
+            <div class="filter-bar">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cari dokumen...">
+                    <button class="btn-search">🔍</button>
+                </div>
+                <div class="filter-options">
+                    <select id="filterType">
+                        <option value="">Semua Jenis</option>
+                        <option value="RKAKL">RKAKL</option>
+                        <option value="RAPK">RAPK</option>
+                        <option value="SPJ">SPJ</option>
+                        <option value="LKJ">LKJ</option>
+                        <option value="LAKIP">LAKIP</option>
+                    </select>
+                    <select id="filterYear">
+                        <option value="">Semua Tahun</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="documents-grid">
+                <!-- Document Item 1 -->
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <span class="doc-type-badge rkakl">RKAKL</span>
+                        <div class="doc-menu">⋮</div>
+                    </div>
+                    <div class="doc-icon">📊</div>
+                    <h3>RKAKL 2026 - Kuartal 1</h3>
+                    <p class="doc-uploader">Diunggah oleh: Budi Santoso</p>
+                    <p class="doc-date">📅 15 Februari 2026</p>
+                    <p class="doc-description">Rencana kerja dan anggaran kinerja lembaga periode kuartal pertama</p>
+                    <div class="doc-actions">
+                        <button class="btn btn-small btn-primary">📥 Download</button>
+                        <button class="btn btn-small btn-outline">👁️ Preview</button>
+                    </div>
+                </div>
+
+                <!-- Document Item 2 -->
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <span class="doc-type-badge rapk">RAPK</span>
+                        <div class="doc-menu">⋮</div>
+                    </div>
+                    <div class="doc-icon">📈</div>
+                    <h3>RAPK 2026 - Program Kegiatan</h3>
+                    <p class="doc-uploader">Diunggah oleh: Siti Nur</p>
+                    <p class="doc-date">📅 14 Februari 2026</p>
+                    <p class="doc-description">Alokasi program dan kegiatan tahunan 2026</p>
+                    <div class="doc-actions">
+                        <button class="btn btn-small btn-primary">📥 Download</button>
+                        <button class="btn btn-small btn-outline">👁️ Preview</button>
+                    </div>
+                </div>
+
+                <!-- Document Item 3 -->
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <span class="doc-type-badge spj">SPJ</span>
+                        <div class="doc-menu">⋮</div>
+                    </div>
+                    <div class="doc-icon">✅</div>
+                    <h3>SPJ Pengadaan Perlengkapan Kantor</h3>
+                    <p class="doc-uploader">Diunggah oleh: Ahmad Wijaya</p>
+                    <p class="doc-date">📅 13 Februari 2026</p>
+                    <p class="doc-description">Surat pertanggungjawaban pengadaan perlengkapan kantor bulan Februari</p>
+                    <div class="doc-actions">
+                        <button class="btn btn-small btn-primary">📥 Download</button>
+                        <button class="btn btn-small btn-outline">👁️ Preview</button>
+                    </div>
+                </div>
+
+                <!-- Document Item 4 -->
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <span class="doc-type-badge lkj">LKJ</span>
+                        <div class="doc-menu">⋮</div>
+                    </div>
+                    <div class="doc-icon">📝</div>
+                    <h3>LKJ Bidang Administrasi</h3>
+                    <p class="doc-uploader">Diunggah oleh: Rini Handoko</p>
+                    <p class="doc-date">📅 12 Februari 2026</p>
+                    <p class="doc-description">Laporan kinerja jabatan staf administrasi periode Januari-Februari 2026</p>
+                    <div class="doc-actions">
+                        <button class="btn btn-small btn-primary">📥 Download</button>
+                        <button class="btn btn-small btn-outline">👁️ Preview</button>
+                    </div>
+                </div>
+
+                <!-- Document Item 5 -->
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <span class="doc-type-badge lakip">LAKIP</span>
+                        <div class="doc-menu">⋮</div>
+                    </div>
+                    <div class="doc-icon">🎯</div>
+                    <h3>LAKIP 2025 - Final Report</h3>
+                    <p class="doc-uploader">Diunggah oleh: Kepala Lembaga</p>
+                    <p class="doc-date">📅 10 Februari 2026</p>
+                    <p class="doc-description">Laporan akuntabilitas kinerja instansi pemerintah tahun 2025</p>
+                    <div class="doc-actions">
+                        <button class="btn btn-small btn-primary">📥 Download</button>
+                        <button class="btn btn-small btn-outline">👁️ Preview</button>
+                    </div>
+                </div>
+
+                <!-- Document Item 6 -->
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <span class="doc-type-badge lainnya">Lainnya</span>
+                        <div class="doc-menu">⋮</div>
+                    </div>
+                    <div class="doc-icon">📑</div>
+                    <h3>Panduan Penggunaan Sistem</h3>
+                    <p class="doc-uploader">Diunggah oleh: IT Administrator</p>
+                    <p class="doc-date">📅 08 Februari 2026</p>
+                    <p class="doc-description">Panduan lengkap penggunaan sistem manajemen dokumen</p>
+                    <div class="doc-actions">
+                        <button class="btn btn-small btn-primary">📥 Download</button>
+                        <button class="btn btn-small btn-outline">👁️ Preview</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <button class="btn btn-outline">← Sebelumnya</button>
+                <span class="page-info">Halaman 1 dari 3</span>
+                <button class="btn btn-outline">Selanjutnya →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>Tentang Sistem Ini</h2>
+            <div class="about-content">
+                <div class="about-item">
+                    <div class="about-icon">🔒</div>
+                    <h3>Aman & Terpercaya</h3>
+                    <p>Dokumen Anda disimpan dengan aman di server terpercaya dengan enkripsi data lengkap</p>
+                </div>
+                <div class="about-item">
+                    <div class="about-icon">⚡</div>
+                    <h3>Cepat & Efisien</h3>
+                    <p>Akses dokumen kapan saja dan di mana saja tanpa perlu share link eksternal lagi</p>
+                </div>
+                <div class="about-item">
+                    <div class="about-icon">📊</div>
+                    <h3>Terorganisir</h3>
+                    <p>Semua dokumen terorganisir rapi berdasarkan jenis dan tahun untuk kemudahan pencarian</p>
+                </div>
+                <div class="about-item">
+                    <div class="about-icon">👥</div>
+                    <h3>Kolaborasi Tim</h3>
+                    <p>Semua pegawai dapat dengan mudah berbagi dokumen dan mengakses informasi terbaru</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Rumah Pendukung Layanan Dukungan Manajemen. Semua hak dilindungi.</p>
+            <p>Email: support@rumahpendukung.id | Telepon: (021) 123-4567</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

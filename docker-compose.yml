@@ -1,0 +1,33 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${DOCKERHUB_USERNAME}/sistem-manajemen-dokumen:latest
+    container_name: ${APP_CONTAINER_NAME:-sistem-manajemen-dokumen-app}
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT:-8000}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: ${DB_CONTAINER_NAME:-sistem-manajemen-dokumen-db}
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${DB_PORT_FORWARD:-3307}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:
