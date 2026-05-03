@@ -81,7 +81,7 @@
                                         <a href="{{ route('rab.show', $rab) }}" class="bg-cyan-500 hover:bg-cyan-600 text-white px-3 py-1 rounded text-xs font-semibold transition inline-block">
                                             <i class="fas fa-eye"></i> Lihat
                                         </a>
-                                        @if(auth()->id() === $rab->user_id || auth()->user()->role === 'admin')
+                                        @if(auth()->user()->role === 'admin' || (auth()->id() === $rab->user_id && in_array($rab->status, ['draft', 'rejected'])))
                                             <a href="{{ route('rab.edit', $rab) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs font-semibold transition inline-block">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>

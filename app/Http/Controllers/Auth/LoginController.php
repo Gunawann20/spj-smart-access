@@ -23,6 +23,14 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
+            if (Auth::user()->status !== 'active') {
+                $status = Auth::user()->status;
+                Auth::logout();
+                $message = $status === 'pending' 
+                    ? 'Akun Anda sedang menunggu persetujuan admin.' 
+                    : 'Akun Anda telah ditolak. Silakan hubungi admin.';
+                return back()->withErrors(['username' => $message]);
+            }
             $request->session()->regenerate();
             return redirect()->route('dashboard');
         }
@@ -57,9 +65,10 @@ class LoginController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'admin',
+            'role' => 'karyawan', // Default role set to karyawan
+            'status' => 'pending', // Default status set to pending
         ]);
 
-        return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
+        return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan admin.');
     }
 }

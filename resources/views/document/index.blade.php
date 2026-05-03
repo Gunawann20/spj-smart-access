@@ -78,7 +78,12 @@
                                             </button>
                                             <a href="{{ route('document.show', $document) }}" class="inline-flex items-center gap-1 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-eye"></i> Lihat</a>
                                             <a href="{{ route('document.download', $document) }}" class="inline-flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-download"></i> Download</a>
-                                            @if($document->status === 'pending' && auth()->user()->id === $document->user_id)
+                                            @if($document->status === 'rejected' && auth()->user()->id === $document->user_id)
+                                                @if($document->jenis_dokumen === 'rab' && $document->rab_id)
+                                                    <a href="{{ route('rab.edit', $document->rab_id) }}" class="inline-flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-edit"></i> Edit RAB</a>
+                                                @else
+                                                    <a href="{{ route('document.edit', $document) }}" class="inline-flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-edit"></i> Edit</a>
+                                                @endif
                                                 <form action="{{ route('document.destroy', $document) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin?')">
                                                     @csrf
                                                     @method('DELETE')
@@ -88,6 +93,18 @@
                                         @else
                                             <a href="{{ route('document.show', $document) }}" class="inline-flex items-center gap-1 bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-eye"></i> Lihat</a>
                                             <a href="{{ route('document.download', $document) }}" class="inline-flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-download"></i> Download</a>
+                                            @if($document->status === 'rejected' && auth()->user()->id === $document->user_id)
+                                                @if($document->jenis_dokumen === 'rab' && $document->rab_id)
+                                                    <a href="{{ route('rab.edit', $document->rab_id) }}" class="inline-flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-edit"></i> Edit RAB</a>
+                                                @else
+                                                    <a href="{{ route('document.edit', $document) }}" class="inline-flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-edit"></i> Edit</a>
+                                                @endif
+                                                <form action="{{ route('document.destroy', $document) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="inline-flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm hover:shadow-md"><i class="fas fa-trash"></i> Hapus</button>
+                                                </form>
+                                            @endif
                                         @endif
                                     </div>
                                 </td>

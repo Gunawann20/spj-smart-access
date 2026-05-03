@@ -156,15 +156,80 @@ class DocumentController extends Controller
         return view('document.show', compact('document'));
     }
 
+    public function edit(Document $document)
+    {
+        if (auth()->user()->role !== 'admin' && auth()->user()->id !== $document->user_id) {
+            abort(403);
+        }
+
+        // Only allow editing if rejected
+        if (auth()->user()->role !== 'admin' && $document->status !== 'rejected') {
+            return redirect()->route('document.index')->with('error', 'Hanya dokumen dengan status ditolak yang dapat diedit.');
+        }
+
+        return view('document.edit', compact('document'));
+    }
+
+    public function update(Request $request, Document $document)
+    {
+        if (auth()->user()->role !== 'admin' && auth()->user()->id !== $document->user_id) {
+            abort(403);
+        }
+
+        // Only allow updating if rejected
+        if (auth()->user()->role !== 'admin' && $document->status !== 'rejected') {
+            return redirect()->route('document.index')->with('error', 'Hanya dokumen dengan status ditolak yang dapat diubah.');
+        }
+
+        $validated = $request->validate([
+            'nama_dokumen' => 'required|string|max:255',
+            'pelaksana' => 'required|string|max:255',
+            'kode_ro' => 'required|string|max:255',
+            'jumlah_anggaran' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string',
+            'document' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip|max:51200',
+        ]);
+
+        $data = [
+            'nama_dokumen' => $validated['nama_dokumen'],
+            'pelaksana' => $validated['pelaksana'],
+            'kode_ro' => $validated['kode_ro'],
+            'jumlah_anggaran' => $validated['jumlah_anggaran'],
+            'keterangan' => $validated['keterangan'],
+            'status' => 'pending', // Reset status to pending when updated
+        ];
+
+        if ($request->hasFile('document')) {
+            // Delete old file
+            if (\Storage::disk('public')->exists($document->file_path)) {
+                \Storage::disk('public')->delete($document->file_path);
+            }
+            
+            $file = $request->file('document');
+            $filePath = $file->store('documents', 'public');
+            $data['file_path'] = $filePath;
+            $data['file_type'] = $file->getClientOriginalExtension();
+            $data['ukuran_file'] = $file->getSize();
+        }
+
+        $document->update($data);
+
+        return redirect()->route('document.index')->with('success', 'Dokumen berhasil diperbarui dan diajukan ulang!');
+    }
+
     public function destroy(Document $document)
     {
         if (auth()->user()->role !== 'admin' && auth()->user()->id !== $document->user_id) {
             abort(403);
         }
 
-        // Only allow deletion if pending
-        if ($document->status !== 'pending') {
-            return back()->withErrors(['error' => 'Hanya file dengan status pending yang dapat dihapus']);
+        // Only allow deletion if pending or rejected
+        if (auth()->user()->role !== 'admin' && !in_array($document->status, ['pending', 'rejected'])) {
+            return back()->withErrors(['error' => 'Hanya file dengan status pending atau ditolak yang dapat dihapus']);
+        }
+
+        if (\Storage::disk('public')->exists($document->file_path)) {
+            \Storage::disk('public')->delete($document->file_path);
         }
 
         $document->delete();

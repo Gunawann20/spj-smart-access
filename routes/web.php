@@ -8,6 +8,7 @@ use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\RabController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,6 +54,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/document/{document}/verification', [DocumentController::class, 'saveVerification'])->name('document.verify');
     Route::post('/document/{document}/sp2d', [DocumentController::class, 'saveSp2d'])->name('document.sp2d');
     Route::get('/document/{document}', [DocumentController::class, 'show'])->name('document.show');
+    Route::get('/document/{document}/edit', [DocumentController::class, 'edit'])->name('document.edit');
+    Route::put('/document/{document}', [DocumentController::class, 'update'])->name('document.update');
     Route::delete('/document/{document}', [DocumentController::class, 'destroy'])->name('document.destroy');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('document.download');
 });
@@ -70,6 +73,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/approval-history', [ApprovalController::class, 'history'])->name('history');
     Route::post('/document/{document}/approve', [DocumentController::class, 'approve'])->name('approve');
     Route::post('/document/{document}/reject', [DocumentController::class, 'reject'])->name('reject');
+
+    // User Management Routes
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
+    Route::post('/users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
+    Route::put('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.update-role');
+    Route::put('/users/{user}/password', [UserController::class, 'changePassword'])->name('users.change-password');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
 // RAB Routes

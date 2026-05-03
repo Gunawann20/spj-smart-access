@@ -61,6 +61,11 @@
                             <i class="fas fa-history w-5 mr-3"></i>Riwayat Approval
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('admin.users.index') }}" class="block px-6 py-3 text-white transition-all duration-300 border-l-4 border-transparent hover:bg-opacity-30 hover:bg-[#f59e0b] hover:border-l-[#f59e0b] hover:pl-8 @if(request()->routeIs('admin.users.*')) bg-opacity-10 bg-[#f59e0b] border-l-[#f59e0b] text-[#f59e0b] pl-8 @endif">
+                            <i class="fas fa-users-cog w-5 mr-3"></i>Manajemen User
+                        </a>
+                    </li>
                 @endif
 
                 <hr class="border-opacity-30 border-[#f59e0b] my-5">

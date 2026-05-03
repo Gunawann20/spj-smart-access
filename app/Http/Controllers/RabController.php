@@ -167,6 +167,11 @@ class RabController extends Controller
             abort(403);
         }
 
+        // Check status - only draft and rejected can be edited by owner
+        if (auth()->user()->role !== 'admin' && !in_array($rab->status, ['draft', 'rejected'])) {
+            return redirect()->route('rab.show', $rab)->with('error', 'RAB yang sedang diajukan atau sudah disetujui tidak dapat diedit.');
+        }
+
         $agendas = Agenda::where('status', 'active')->get();
         $rab->load('items');
         return view('rab.edit', compact('rab', 'agendas'));
@@ -176,6 +181,11 @@ class RabController extends Controller
     {
         if (auth()->id() !== $rab->user_id && auth()->user()->role !== 'admin') {
             abort(403);
+        }
+
+        // Check status - only draft and rejected can be updated by owner
+        if (auth()->user()->role !== 'admin' && !in_array($rab->status, ['draft', 'rejected'])) {
+            return redirect()->route('rab.show', $rab)->with('error', 'RAB yang sedang diajukan atau sudah disetujui tidak dapat diubah.');
         }
 
         $validated = $request->validate([

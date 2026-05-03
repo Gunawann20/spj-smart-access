@@ -295,7 +295,7 @@
             <a href="{{ route('rab.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition">
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
-            @if(auth()->id() === $rab->user_id || auth()->user()->role === 'admin')
+            @if(auth()->user()->role === 'admin' || (auth()->id() === $rab->user_id && in_array($rab->status, ['draft', 'rejected'])))
                 <a href="{{ route('rab.edit', $rab) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold transition">
                     <i class="fas fa-edit"></i> Edit
                 </a>
