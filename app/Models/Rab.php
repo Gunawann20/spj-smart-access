@@ -7,29 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 class Rab extends Model
 {
     protected $fillable = [
-        'user_id',
-        'agenda_id',
-        'judul_rab',
-        'nomor_rab',
-        'tanggal_rab',
-        'waktu_mulai',
-        'waktu_selesai',
-        'tempat_pelaksanaan',
-        'sumber_kegiatan',
-        'jenis_kegiatan',
-        'akun_yang_digunakan',
-        'tahun_anggaran',
-        'keterangan_rab',
-        'total_jumlah',
-        'nama_pemoton',
-        'nama_direktur',
-        'nama_pejabat',
-        'status',
+        'User_id',
+        'Agenda_id',
+        'Judul_RAB',
+        'Nomor_RAB',
+        'Tanggal_RAB',
+        'Waktu_Mulai',
+        'Waktu_Selesai',
+        'Tempat_Pelaksanaan',
+        'Sumber_Kegiatan',
+        'Jenis_Kegiatan',
+        'Akun_yang_Digunakan',
+        'Tahun_Anggaran',
+        'Keterangan_RAB',
+        'Total_Jumlah',
+        'Nama_Pemohon',
+        'Nama_Direktur',
+        'Nama_Pejabat',
+        'Status',
     ];
 
     protected $casts = [
-        'tanggal_rab' => 'datetime',
-        'total_jumlah' => 'decimal:2',
+        'Tanggal_RAB' => 'datetime',
+        'Total_Jumlah' => 'decimal:2',
     ];
 
     public function user()
